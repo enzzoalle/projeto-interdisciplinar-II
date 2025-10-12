@@ -1,0 +1,7 @@
+[Bb]in/
+[Oo]bj/
+.idea/
+*.user
+*.suo
+secrets.json
+appsettings.json

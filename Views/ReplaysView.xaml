@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="ReplaysApp.Views.ReplaysView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid Margin="15" Background="{StaticResource PrimaryBackgroundColor}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <DockPanel Grid.Column="0" Margin="0,0,15,0">
+            <Button Content="Salvar Replay" Click="SalvarReplayBotao_Click" DockPanel.Dock="Bottom" Margin="0,10,0,0" Padding="10" FontSize="14" FontWeight="Bold"/>
+            <Border BorderBrush="{StaticResource BorderColor}" BorderThickness="1">
+                <Image Source="{Binding ImagemDaCamera}"/>
+            </Border>
+        </DockPanel>
+
+        <GroupBox Grid.Column="1" Header="Replays Salvos" Foreground="{StaticResource PrimaryForegroundColor}" BorderBrush="{StaticResource BorderColor}">
+            <ListBox ItemsSource="{Binding Replays}" HorizontalContentAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="5">
+                            <TextBlock Text="{Binding DisplayInfo}" FontWeight="Bold" TextWrapping="Wrap"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                <Button Content="Renomear" Margin="0,0,5,0" Padding="8,4"
+                                        Command="{Binding DataContext.RenomearReplayCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                        CommandParameter="{Binding}"/>
+                                <Button Content="Download" Padding="8,4" Margin="0,0,5,0"
+                                        Command="{Binding DataContext.CopiarReplayCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                        CommandParameter="{Binding}"/>
+                                <Button Content="Excluir" Padding="8,4" 
+                                        Command="{Binding DataContext.ExcluirReplayCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                        CommandParameter="{Binding}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </GroupBox>
+    </Grid>
+</UserControl>
