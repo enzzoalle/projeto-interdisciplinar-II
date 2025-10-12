@@ -106,12 +106,3 @@ Substitua os placeholders seu_usuario_pg e sua_senha_pg pelas suas credenciais d
 ```
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Username=seu_usuario_pg;Password=sua_senha_pg;Database=dev_replays"
 ```
-
-
-🧑‍💻 Autor
-
-Desenvolvido por Enzo Allebrand
-
-📧 Email: enzoedu445@gmail.com
-
-🌐 GitHub: https://github.com/enzoalle
