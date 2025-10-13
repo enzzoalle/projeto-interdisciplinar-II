@@ -30,8 +30,9 @@ namespace ReplaysApp.ViewModels
         public ICommand RenomearReplayCommand { get; }
         public ICommand CopiarReplayCommand { get; }
         public ICommand ExcluirReplayCommand { get; }
+        public ICommand LogoutCommand { get; }
 
-        public ReplaysViewModel(User usuarioLogado)
+        public ReplaysViewModel(User usuarioLogado, Action onLogoutRequest)
         {
             _usuarioLogado = usuarioLogado ?? throw new ArgumentNullException(nameof(usuarioLogado));
             _pastaDosReplays = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos), "ReplaysApp");
@@ -44,6 +45,7 @@ namespace ReplaysApp.ViewModels
             RenomearReplayCommand = new RelayCommand<Replay>(RenomearReplay);
             CopiarReplayCommand = new RelayCommand<Replay>(CopiarReplay);
             ExcluirReplayCommand = new RelayCommand<Replay>(ExcluirReplay);
+            LogoutCommand = new RelayCommand<object>(_ => onLogoutRequest());
         }
 
         public void SalvarReplay(Queue<Mat> bufferDeFrames)

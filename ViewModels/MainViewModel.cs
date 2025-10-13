@@ -15,6 +15,11 @@ namespace ReplaysApp.ViewModels
 
         public MainViewModel()
         {
+            ShowLoginView();
+        }
+        
+        private void ShowLoginView()
+        {
             var loginViewModel = new LoginViewModel();
             loginViewModel.LoginSucceeded += OnLoginSucceeded;
             CurrentViewModel = loginViewModel;
@@ -22,7 +27,12 @@ namespace ReplaysApp.ViewModels
 
         private void OnLoginSucceeded(User loggedInUser)
         {
-            CurrentViewModel = new ReplaysViewModel(loggedInUser);
+            CurrentViewModel = new ReplaysViewModel(loggedInUser, OnLogoutRequest);
+        }
+
+        private void OnLogoutRequest()
+        {
+            ShowLoginView();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
