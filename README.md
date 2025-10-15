@@ -53,8 +53,7 @@ Para clonar e executar esta aplicação em sua máquina, siga os passos abaixo.
 Abra um terminal e clone o projeto:
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/enzzoalle/projeto-interdisciplinar-II.git
 ```
 
 ### 2️⃣ Configuração do Banco de Dados
@@ -69,25 +68,25 @@ CREATE DATABASE dev_replays;
 
 -- Tabela de Usuários
 CREATE TABLE Users (
-id SERIAL PRIMARY KEY,
-nome VARCHAR(100) NOT NULL UNIQUE,
-senha VARCHAR(255) NOT NULL
+                       id SERIAL PRIMARY KEY,
+                       nome VARCHAR(100) NOT NULL UNIQUE,
+                       senha VARCHAR(255) NOT NULL
 );
 
 -- Tabela de Replays
 CREATE TABLE Replays (
-id SERIAL PRIMARY KEY,
-nome VARCHAR(255),
-data_gravacao TIMESTAMP NOT NULL,
-caminho_arquivo TEXT NOT NULL,
-duracao_segundos INT NOT NULL,
-user_id INT NOT NULL,
+                         id SERIAL PRIMARY KEY,
+                         nome VARCHAR(255),
+                         data_gravacao TIMESTAMP NOT NULL,
+                         caminho_arquivo TEXT NOT NULL,
+                         duracao_segundos INT NOT NULL,
+                         user_id INT NOT NULL,
 
     -- Define a relação: Replays.user_id se conecta com Users.id
-    CONSTRAINT fk_user
-        FOREIGN KEY(user_id) 
-        REFERENCES Users(id)
-        ON DELETE CASCADE -- Se um usuário for deletado, seus replays também são.
+                         CONSTRAINT fk_user
+                             FOREIGN KEY(user_id)
+                                 REFERENCES Users(id)
+                                 ON DELETE CASCADE -- Se um usuário for deletado, seus replays também são.
 );
 ```
 

@@ -16,6 +16,7 @@ namespace ReplaysApp.Models
 
         public string CaminhoArquivo { get; set; }
         public DateTime DataGravacao { get; set; }
+        public string CaminhoThumbnail { get; set; }
 
         public string DisplayInfo => $"{Nome} - {DataGravacao:dd/MM/yyyy HH:mm:ss}";
 
