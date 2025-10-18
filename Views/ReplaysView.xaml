@@ -41,9 +41,13 @@
 
             <StackPanel Grid.Row="1" Margin="0,10,0,0"
                         Visibility="{Binding IsPlaybackVisible, Converter={StaticResource BoolToVis}}">
-                <Slider Maximum="{Binding PlaybackDuration.TotalSeconds}"
-                        Value="{Binding PlaybackProgress.TotalSeconds, Mode=OneWay, Converter={StaticResource TimeSpanConverter}}"
-                        Thumb.DragCompleted="Slider_DragCompleted"/>
+                <Slider x:Name="ProgressSlider"
+                        IsMoveToPointEnabled="True"
+                        Maximum="{Binding PlaybackDuration.TotalSeconds}"
+                        Value="{Binding PlaybackProgress, Mode=TwoWay, Converter={StaticResource TimeSpanConverter}}"
+                        Thumb.DragStarted="Slider_DragStarted"
+                        Thumb.DragCompleted="Slider_DragCompleted"
+                        PreviewMouseLeftButtonUp="Slider_PreviewMouseLeftButtonUp"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,0">
                     <Button Content="{Binding PlayPauseButtonContent}" Command="{Binding PlayPauseCommand}" MinWidth="80" FontWeight="Bold"/>
                     <Button Content="Voltar para Câmera" Command="{Binding VoltarParaCameraCommand}" MinWidth="80" Margin="10,0,0,0"/>

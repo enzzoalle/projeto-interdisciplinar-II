@@ -24,8 +24,10 @@ namespace ReplaysApp.Views
         private Queue<Mat> _bufferDeFrames;
         
         private DispatcherTimer _playbackTimer;
+        private bool _isDragging;
         
         private ReplaysViewModel _viewModel => DataContext as ReplaysViewModel;
+        private System.Windows.Window _ownerWindow;
 
         public ReplaysView()
         {
@@ -52,19 +54,34 @@ namespace ReplaysApp.Views
             _cameraTimer.Tick += AtualizarFrame;
             _cameraTimer.Start();
 
-            // Adiciona um listener para a propriedade IsPlaying no ViewModel
             if (_viewModel != null)
             {
                 _viewModel.PropertyChanged += ViewModel_PropertyChanged;
             }
 
+            _ownerWindow = System.Windows.Window.GetWindow(this);
+            if (_ownerWindow != null)
+            {
+                _ownerWindow.PreviewKeyDown += Window_PreviewKeyDown;
+            }
+
             this.Focus();
         }
 
-        // Este método observa as mudanças no ViewModel
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Space)
+            {
+                if (_viewModel != null && _viewModel.IsCameraVisible)
+                {
+                    SalvarReplayBotao_Click(this, new RoutedEventArgs());
+                    e.Handled = true;
+                }
+            }
+        }
+
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            // Se a propriedade IsPlaying mudou, nós damos o comando Play/Pause no MediaElement
             if (e.PropertyName == nameof(ReplaysViewModel.IsPlaying))
             {
                 if (_viewModel.IsPlaying)
@@ -92,7 +109,6 @@ namespace ReplaysApp.Views
         private void MediaPlayer_OnMediaEnded(object sender, RoutedEventArgs e)
         {
             _playbackTimer.Stop();
-            // Reseta a posição para o início
             MediaPlayer.Position = TimeSpan.Zero;
             _viewModel?.VoltarParaCameraCommand.Execute(null);
         }
@@ -101,17 +117,57 @@ namespace ReplaysApp.Views
         {
             if (_viewModel != null && MediaPlayer.NaturalDuration.HasTimeSpan)
             {
-                _viewModel.PlaybackProgress = MediaPlayer.Position;
+                if (!_isDragging)
+                    _viewModel.PlaybackProgress = MediaPlayer.Position;
             }
         }
 
-        // Permite que o usuário arraste a barra de progresso
+        private void Slider_DragStarted(object sender, DragStartedEventArgs e)
+        {
+            _isDragging = true;
+        }
+
         private void Slider_DragCompleted(object sender, DragCompletedEventArgs e)
         {
-            if (sender is Slider slider)
+            _isDragging = false;
+            SeekToSliderValue();
+        }
+
+        private void Slider_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (_isDragging) return;
+            SeekToSliderValue();
+        }
+
+        private void SeekToSliderValue()
+        {
+            try
             {
-                MediaPlayer.Position = TimeSpan.FromSeconds(slider.Value);
-                _viewModel.PlaybackProgress = MediaPlayer.Position;
+                if (MediaPlayer == null || MediaPlayer.Source == null) return;
+                if (!MediaPlayer.NaturalDuration.HasTimeSpan) return;
+
+                double seconds = 0;
+                if (this.FindName("ProgressSlider") is Slider progress)
+                {
+                    seconds = progress.Value;
+                }
+                else
+                {
+                    seconds = MediaPlayer.Position.TotalSeconds;
+                }
+
+                var max = MediaPlayer.NaturalDuration.TimeSpan.TotalSeconds;
+                if (double.IsNaN(seconds) || double.IsInfinity(seconds)) seconds = 0;
+                if (seconds < 0) seconds = 0;
+                if (seconds > max) seconds = max;
+
+                MediaPlayer.Position = TimeSpan.FromSeconds(seconds);
+                if (_viewModel != null)
+                    _viewModel.PlaybackProgress = MediaPlayer.Position;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Erro ao fazer seek: " + ex.Message);
             }
         }
         #endregion
@@ -122,8 +178,11 @@ namespace ReplaysApp.Views
             base.OnKeyDown(e);
             if (e.Key == Key.Space)
             {
-                SalvarReplayBotao_Click(this, new RoutedEventArgs());
-                e.Handled = true;
+                if (_viewModel != null && _viewModel.IsCameraVisible)
+                {
+                    SalvarReplayBotao_Click(this, new RoutedEventArgs());
+                    e.Handled = true;
+                }
             }
         }
 
@@ -154,6 +213,12 @@ namespace ReplaysApp.Views
         
         private void JanelaDescarregada(object sender, RoutedEventArgs e)
         {
+            if (_ownerWindow != null)
+            {
+                _ownerWindow.PreviewKeyDown -= Window_PreviewKeyDown;
+                _ownerWindow = null;
+            }
+
             _cameraTimer?.Stop();
             _playbackTimer?.Stop();
             _captura?.Release();
