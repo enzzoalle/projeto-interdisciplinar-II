@@ -67,27 +67,28 @@ CREATE DATABASE dev_replays;
 -- 2. Conecte-se ao banco 'dev_replays' pelo DBeaver e execute as criações de tabela abaixo
 
 -- Tabela de Usuários
-CREATE TABLE Users (
-                       id SERIAL PRIMARY KEY,
-                       nome VARCHAR(100) NOT NULL UNIQUE,
-                       senha VARCHAR(255) NOT NULL
+CREATE TABLE public.users (
+    id serial4 NOT NULL,
+    nome varchar(22) NOT NULL,
+    senha varchar(22) NOT NULL,
+    CONSTRAINT users_nome_key UNIQUE (nome),
+    CONSTRAINT users_pkey PRIMARY KEY (id)
 );
 
 -- Tabela de Replays
-CREATE TABLE Replays (
-                         id SERIAL PRIMARY KEY,
-                         nome VARCHAR(255),
-                         data_gravacao TIMESTAMP NOT NULL,
-                         caminho_arquivo TEXT NOT NULL,
-                         duracao_segundos INT NOT NULL,
-                         user_id INT NOT NULL,
-
-    -- Define a relação: Replays.user_id se conecta com Users.id
-                         CONSTRAINT fk_user
-                             FOREIGN KEY(user_id)
-                                 REFERENCES Users(id)
-                                 ON DELETE CASCADE -- Se um usuário for deletado, seus replays também são.
+CREATE TABLE public.replays (
+    id serial4 NOT NULL,
+    data_gravacao timestamp NOT NULL,
+    caminho_arquivo text NOT NULL,
+    duracao_segundos int4 NOT NULL,
+    user_id int4 NOT NULL,
+    nome varchar(44) NULL,
+    caminho_thumbnail text NULL,
+    CONSTRAINT replays_pkey PRIMARY KEY (id)
 );
+
+-- chaves estrangeiras
+ALTER TABLE public.replays ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 ```
 
 ### 3️⃣ Configuração do User Secrets
