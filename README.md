@@ -1,6 +1,6 @@
-# 🎥 Replay Catcher
+# 🎥 Lance Certo
 
-O **Replay Catcher** é uma aplicação de desktop para **Windows**, desenvolvida em **C# com WPF**, que permite capturar os últimos **30 segundos de vídeo da sua webcam** com o clique de um botão.  
+O **Lance Certo** é uma aplicação de desktop para **Windows**, desenvolvida em **C# com WPF**, que permite capturar os últimos **30 segundos de vídeo da sua webcam** com o clique de um botão.  
 O projeto conta com um sistema de autenticação de usuários, onde cada usuário pode gerenciar sua própria lista de replays salvos.
 
 ---

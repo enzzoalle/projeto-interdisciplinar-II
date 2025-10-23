@@ -72,11 +72,8 @@ namespace ReplaysApp.Views
         {
             if (e.Key == Key.Space)
             {
-                if (_viewModel != null && _viewModel.IsCameraVisible)
-                {
-                    SalvarReplayBotao_Click(this, new RoutedEventArgs());
-                    e.Handled = true;
-                }
+                SalvarReplayBotao_Click(this, new RoutedEventArgs());
+                e.Handled = true;
             }
         }
 
@@ -176,13 +173,10 @@ namespace ReplaysApp.Views
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-            if (e.Key == Key.Space)
+            if (e.Key == Key.Space && (_viewModel?.isAdmin ?? false))
             {
-                if (_viewModel != null && _viewModel.IsCameraVisible)
-                {
-                    SalvarReplayBotao_Click(this, new RoutedEventArgs());
-                    e.Handled = true;
-                }
+                SalvarReplayBotao_Click(this, new RoutedEventArgs());
+                e.Handled = true;
             }
         }
 

@@ -5,5 +5,4 @@
 *.suo
 secrets.json
 appsettings.json
-/.vs/ReplaysApp
-/.vs/ProjectEvaluation
+/.vs/*
