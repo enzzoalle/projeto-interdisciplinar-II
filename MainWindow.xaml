@@ -1,7 +1,7 @@
 <Window x:Class="ReplaysApp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ReplaysApp" Height="600" Width="950" WindowStartupLocation="CenterScreen">
+        Title="Lance Certo" Height="600" Width="950" WindowStartupLocation="CenterScreen">
     
     <Grid Background="{StaticResource PrimaryBackgroundColor}">
         <ContentControl Content="{Binding CurrentViewModel}" />
