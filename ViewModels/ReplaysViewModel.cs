@@ -20,6 +20,7 @@ namespace ReplaysApp.ViewModels
     {
         private readonly User _usuarioLogado;
         private readonly string _pastaDosReplays;
+        public bool isAdmin => _usuarioLogado?.isAdmin ?? false;
 
         public ObservableCollection<Replay> Replays { get; set; }
 
@@ -45,23 +46,18 @@ namespace ReplaysApp.ViewModels
                 {
                     PlaybackSource = new Uri(_replaySelecionado.CaminhoArquivo);
                     IsPlaybackVisible = true;
-                    IsCameraVisible = false;
-                    IsPlaying = true; // Adicione esta linha
+                    IsPlaying = true;
                 }
                 else
                 {
                     VoltarParaCamera();
                 }
-
-                // Notifica a UI sobre todas as propriedades que podem ter mudado
                 OnPropertyChanged(nameof(PlaybackSource));
                 OnPropertyChanged(nameof(IsPlaybackVisible));
-                OnPropertyChanged(nameof(IsCameraVisible));
             }
         }
 
         public Uri PlaybackSource { get; private set; }
-        public bool IsCameraVisible { get; private set; } = true;
         public bool IsPlaybackVisible { get; private set; } = false;
 
         private bool _isPlaying;
@@ -111,14 +107,20 @@ namespace ReplaysApp.ViewModels
             LogoutCommand = new RelayCommand<object>(_ => onLogoutRequest());
             PlayPauseCommand = new RelayCommand<object>(_ => IsPlaying = !IsPlaying);
             VoltarParaCameraCommand = new RelayCommand<object>(_ => VoltarParaCamera());
-            
-            Task.Run(CarregarReplaysDoBanco);
+
+            if (isAdmin)
+            {
+                Task.Run(CarregarReplaysDoBanco);
+            }
+            else
+            {
+                return;
+            }
         }
 
         private void VoltarParaCamera()
         {
             IsPlaybackVisible = false;
-            IsCameraVisible = true;
             PlaybackSource = null;
             IsPlaying = false;
             
@@ -126,7 +128,6 @@ namespace ReplaysApp.ViewModels
             OnPropertyChanged(nameof(ReplaySelecionado));
             OnPropertyChanged(nameof(PlaybackSource));
             OnPropertyChanged(nameof(IsPlaybackVisible));
-            OnPropertyChanged(nameof(IsCameraVisible));
         }
 
         public async Task SalvarReplay(Queue<Mat> bufferDeFrames)
