@@ -36,7 +36,7 @@ namespace ReplaysApp.ViewModels
                 using (var conn = new NpgsqlConnection(App.Configuration.GetConnectionString("DefaultConnection")))
                 {
                     conn.Open();
-                    var sql = "SELECT id, nome FROM Users WHERE nome = @nome AND senha = @senha";
+                    var sql = "SELECT id, nome, isAdmin FROM Users WHERE nome = @nome AND senha = @senha";
                     using (var cmd = new NpgsqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("nome", Username);
@@ -45,7 +45,12 @@ namespace ReplaysApp.ViewModels
                         {
                             if (reader.Read())
                             {
-                                LoggedInUser = new User { Id = reader.GetInt32(0), Nome = reader.GetString(1) };
+                                LoggedInUser = new User
+                                {
+                                    Id = reader.GetInt32(0), 
+                                    Nome = reader.GetString(1),
+                                    isAdmin = reader.GetBoolean(2)
+                                };
                                 LoginSucceeded?.Invoke(LoggedInUser);
                             }
                             else
